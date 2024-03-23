@@ -1,0 +1,16 @@
+TERMINAL QOYDALARI
+
+1) node -v NodeJSni bilish uchun
+2) npm -v NMPni bilish uchun
+3) npm i json-server@0.17.4 JSON-SERVER paketini o'rnatish uchun
+4) npm run server - serverni ishga tushurish uchun (package.json da tayyor qoyda yozilgan)
+5) npm i yoki npm install - node_modulesni qayta o'rnatish uchun
+6) npm i webpack - webpackni proyekta ulash uchun
+7) npm i webpack-cli - webpackni proyek global versiyasi
+8) npm i webpack-dev-server - localhost proyek uchun 
+
+HAVOLALAR
+
+1) NODEJS https://nodejs.org/en
+2) NPM https://www.npmjs.com/
+3) JSON-SERVER https://www.npmjs.com/package/json-server/
