@@ -5,6 +5,17 @@
       "username": "Khaetbek",
       "email": "khaetbek@internet.ru",
       "body": "Hello world!"
+    },
+    {
+      "username": "Abu",
+      "body": "hello",
+      "email": "abu@gmail.com",
+      "id": 2
+    },
+    {
+      "username": null,
+      "body": null,
+      "id": 3
     }
   ]
 }
