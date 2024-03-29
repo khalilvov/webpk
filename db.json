@@ -1,21 +1,26 @@
 {
   "users": [
     {
-      "id": 1,
-      "username": "Khaetbek",
-      "email": "khaetbek@internet.ru",
-      "body": "Hello world!"
-    },
-    {
-      "username": "Abu",
-      "body": "hello",
-      "email": "abu@gmail.com",
-      "id": 2
+      "username": null,
+      "body": "Hello world!rw",
+      "id": 1
     },
     {
       "username": null,
-      "body": null,
+      "body": "Hello world!eeeqwqewew",
+      "id": 2
+    },
+    {
+      "username": "dasdas",
+      "body": "sdasdasdasdasd",
+      "email": "dasd@dasdas",
       "id": 3
+    },
+    {
+      "username": "fdfsdf",
+      "body": "sadasdas",
+      "email": "sdfsd@asda",
+      "id": 4
     }
   ]
 }

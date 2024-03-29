@@ -1,47 +1,63 @@
-import { RequestDelete, RequestGet, RequestPost } from './api';
+import { RequestDelete, RequestGet, RequestPost, RequestPut } from "./api";
+
+const LocalStorage = () => {
+    const usersData = localStorage.getItem("users");
+    const users = JSON.parse(usersData);
+
+    if (!users){
+        localStorage.setItem("users", JSON.stringify([]))
+    } else {
+        RequestGet("/users").then(data => {
+            // const newUserData = users.concat(data)
+            // console.log(newUserData);
+    
+            localStorage.setItem("users", JSON.stringify(data))
+        })
+    }
+}
 
 const Init = () => {
-  const container = document.querySelector('#table tbody');
+    const container = document.querySelector("#table tbody");
 
-  const buttonPost = document.querySelector('#post');
-  const buttonPatch = document.querySelector('#patch');
-  const buttonDelete = document.querySelector('#delete');
+    const buttonPost = document.querySelector("#post");
+    const buttonPatch = document.querySelector("#patch");
+    const buttonDelete = document.querySelector("#delete");
 
-  const user = {
-    username: null,
-    body: null,
-    email: undefined,
-  };
+    const user = {
+        username: null,
+        body: null,
+        email: undefined,
+    }
 
-  const inputUsername = document.querySelector('#user-name');
-  const inputEmail = document.querySelector('#user-email');
-  const inputComment = document.querySelector('#user-comment');
-  const inputUserId = document.querySelector('#user-id');
+    const inputUsername = document.querySelector("#user-name");
+    const inputEmail = document.querySelector("#user-email");
+    const inputComment = document.querySelector("#user-comment");
 
-  inputUsername.addEventListener('input', () => {
-    user.username = inputUsername.value;
-  });
-  inputEmail.addEventListener('input', () => {
-    user.email = inputEmail.value;
-  });
-  inputComment.addEventListener('input', () => {
-    user.body = inputComment.value;
-  });
+    LocalStorage();
 
-  buttonPost.addEventListener('input', () => {
-    user.body = inputComment.value;
-  });
+    const usersData = JSON.parse(localStorage.getItem("users"))
 
-  container.innerHTML = `<tr><td>Loading...</td></tr>`;
+    inputUsername.addEventListener("input", () => {
+        user.username = inputUsername.value;
+    })
 
-  RequestGet('/users').then((data) => {
-    container.innerHTML = '';
+    inputEmail.addEventListener("input", () => {
+        user.email = inputEmail.value;
+    })
 
-    data.forEach((user, index) => {
-      index += 1;
-      container.insertAdjacentHTML(
-        'beforeend',
-        `
+    inputComment.addEventListener("input", () => {
+        user.body = inputComment.value;
+    });
+
+    container.innerHTML = `<tr><td>Loading...</td></tr>`
+
+    if(usersData?.length) {
+        container.innerHTML = "";
+        LocalStorage();
+
+        usersData.forEach((user, index) => {
+            index += 1;
+            container.insertAdjacentHTML("beforeend", `
                 <tr>
                     <th scope="row">${index}</th>
                     <td>${user.username}</td>
@@ -54,94 +70,56 @@ const Init = () => {
                         <button class="btn btn-danger" data-user-delete-id="${user.id}">Delete</button>
                     </td>
                 </tr>
-            `
-      );
-    });
-
-    const patchButtons = document.querySelectorAll('[data-user-patch-id]');
-    const deleteButtons = document.querySelectorAll('[data-user-delete-id]');
-
-    if (
-      (patchButtons && patchButtons?.lenght) ||
-      (deleteButtons && deleteButtons?.lenght)
-    ) {
-      patchButtons.forEach((patchButton) => {
-        const currentButton = patchButton;
-
-        currentButton.addEventListener('click', (e) => {
-          const id = e.target.dataset.userPatchId;
-
-          console.log(id);
-
-          if (
-            inputEmail.value == '' ||
-            inputComment.value == '' ||
-            inputUsername.value == ''
-          ) {
-            RequestGet(`/users/${id}`).then((data) => {
-              inputComment.value = data.body;
-              inputEmail.value = data.email;
-              inputUsername.value = data.username;
-
-              inputUserId.value = data.id;
-            });
-          }else{
-            RequestPut(`/users/${id}`,user).then(() => {
-                alert("Updated")
-            }).catch(error => {
-                alert(`Xatolik: ${error.message}`);
-                console.error(error);
-            })
-          }
-        });
-      });
-    }
-  });
-
-  buttonPost.addEventListener('click', () => {
-    RequestPost('/users', user)
-      .then(() => {
-        alert('POSTED');
-      })
-      .catch((error) => {
-        alert(`sizning Xatoingiz: ${error.message} `);
-        console.error(error);
-      });
-  });
-
-  buttonPatch.addEventListener('click', () => {
-    if (
-      inputUsername.value == '' ||
-      inputEmail.value == '' ||
-      inputComment.value == ''
-    ) {
-      RequestGet(`/users/${inputUserId.value}`).then((data) => {
-        inputUsername.value = data.username;
-        inputEmail.value = data.email;
-        inputComment.value = data.body;
-      });
-    } else {
-      RequestPut(`/users/${InputUserId.value}`, user)
-        .then(() => {
-          alert('PATCHED');
+            `);
         })
-        .catch((error) => {
-          alert(`sizning Xatoingiz: ${error.message} `);
-          console.error(error);
-        });
     }
-  });
 
-  buttonDelete.addEventListener('click', () => {
-    RequestDelete(`/users/${inputUserId.value}`)
-      .then(() => {
-        alert('DELETED');
-      })
-      .catch((error) => {
-        alert(`Xatolik: ${error.message}`);
-        console.error(error);
-      });
-  });
-};
+   
+
+
+    buttonPost.addEventListener("click", () => {
+        RequestPost("/users", user).then(() => {
+            alert("POSTED")
+            LocalStorage();
+        }).catch(error => {
+            alert(`Sizning xatoingiz: ${error.message}`);
+            console.error(error)
+        })
+    })
+
+    const inputUserId = document.querySelector("#user-id");
+
+    buttonPatch.addEventListener("click", () => {
+        if (
+            inputUsername.value == "" ||
+            inputEmail.value == "" ||
+            inputComment.value == ""
+        ) {
+            RequestGet(`/users/${inputUserId.value}`).then(data => {
+                inputUsername.value = data.username;
+                inputEmail.value = data.email;
+                inputComment.value = data.body;
+            })
+        } else {
+            RequestPut(`/users/${inputUserId.value}, user`).then(() => {
+                alert("PATCHED");
+                LocalStorage();
+            }).catch(error => {
+                alert(`Sizning xatoingiz: ${error.message}`);
+                console.error(error)
+            })
+        }
+    })
+
+    buttonDelete.addEventListener("click", () => {
+        RequestDelete(`/users/${inputUserId.value}`).then(() => {
+            alert("DELETED");
+            LocalStorage();
+        }).catch(error => {
+            alert(`Xatolik: ${error.message}`);
+            console.error(error);
+        })
+    })
+}
 
 export default Init;
